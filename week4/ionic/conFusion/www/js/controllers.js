@@ -1,6 +1,6 @@
 angular.module('conFusion.controllers', [])
 
-.controller('AppCtrl', function ($scope, $ionicModal, $timeout, $localStorage, $ionicPlatform, $cordovaCamera) {
+.controller('AppCtrl', function ($scope, $ionicModal, $timeout, $localStorage, $ionicPlatform, $cordovaCamera,$cordovaImagePicker) {
 
     // With the new view caching in Ionic, Controllers are only called
     // when they are recreated or on app start, instead of every page change.
@@ -11,7 +11,6 @@ angular.module('conFusion.controllers', [])
  
     // Form data for the login modal
     $scope.loginData = $localStorage.getObject('userinfo', '{}');
-    $scope.reservation = {};
     $scope.registration = {};
     // Create the login modal that we will use later
     $ionicModal.fromTemplateUrl('templates/login.html', {
@@ -40,7 +39,7 @@ angular.module('conFusion.controllers', [])
             $scope.closeLogin();
         }, 1000);
     };
-    
+    $scope.reservation = {};
 
     // Create the reserve modal that we will use later
     $ionicModal.fromTemplateUrl('templates/reserve.html', {
@@ -119,6 +118,25 @@ $ionicPlatform.ready(function() {
             $scope.registerform.show();
 
         };
+ $scope.getPicture = function() {
+
+    var options = {
+   maximumImagesCount: 1,
+   width: 100,
+   height: 100,
+   quality: 50
+  };
+
+$cordovaImagePicker.getPictures(options)
+    .then(function (results) {
+      for (var i = 0; i < results.length; i++) {
+        $scope.registration.imgSrc =  results[i];
+      }
+    }, function(error) {
+      // error getting photos
+    });
+};
+
     });
 })
 
